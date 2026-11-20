@@ -1,9 +1,8 @@
 # Queen Bee — TP Backend Node.js
 
-## Membres du groupe
+Master 1 Dev 
 
-- Firas AYADI
-- BENBRAHIM Mohamed
+-Walid Nabel
 
 ## TP 1 — Lecture des mesures sans bloquer
 
