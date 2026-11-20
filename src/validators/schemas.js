@@ -1,0 +1,58 @@
+import Joi from "joi";
+
+export const paginationSchema = Joi.object({
+  limit: Joi.number().integer().min(1).max(500).default(50),
+  offset: Joi.number().integer().min(0).default(0),
+}).unknown(false);
+
+export const hivesQuerySchema = Joi.object({
+  site_id: Joi.string().trim().min(1),
+}).unknown(false);
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email({ tlds: { allow: false } }).max(255).required(),
+  password: Joi.string().min(1).max(128).required(),
+}).unknown(false);
+
+export const refreshSchema = Joi.object({
+  refresh_token: Joi.string().required(),
+}).unknown(false);
+
+export const createUserSchema = Joi.object({
+  email: Joi.string().email({ tlds: { allow: false } }).max(255).required(),
+  password: Joi.string().min(12).max(128).required(),
+  role: Joi.string().valid("apiculteur", "coordinateur", "gestionnaire", "admin").required(),
+  site_id: Joi.string().trim().min(1).allow(null),
+}).unknown(false);
+
+export const measureSchema = Joi.object({
+  hive_id: Joi.string(),
+  site_id: Joi.string(),
+  timestamp: Joi.date().iso().required(),
+  position_lat: Joi.number().min(-90).max(90).allow(null),
+  position_lon: Joi.number().min(-180).max(180).allow(null),
+  weight_kg: Joi.number().min(0).max(150).required(),
+  temp_internal_c: Joi.number().min(-10).max(60).allow(null),
+  temp_external_c: Joi.number().min(-20).max(60).allow(null),
+  humidity_pct: Joi.number().integer().min(0).max(100).allow(null),
+  acoustic_activity_score: Joi.number().min(0).max(1).allow(null),
+  battery_pct: Joi.number().integer().min(0).max(100).allow(null),
+}).unknown(false);
+
+export const inspectionSchema = Joi.object({
+  id: Joi.string().guid().required(),
+  hive_id: Joi.string(),
+  inspected_at: Joi.date().iso().max("now").required(),
+  colony_status: Joi.string().valid("forte", "normale", "faible", "morte").required(),
+  queen_present: Joi.boolean().allow(null),
+  observations: Joi.string().max(2000).allow("", null),
+}).unknown(false);
+
+export const inspectionSyncItemSchema = inspectionSchema.keys({
+  hive_id: Joi.string().required(),
+  version: Joi.number().integer().min(1),
+});
+
+export const inspectionSyncSchema = Joi.object({
+  inspections: Joi.array().items(Joi.any()).min(1).max(500).required(),
+}).unknown(false);
